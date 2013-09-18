@@ -63,7 +63,7 @@ exit
 }
 #having to use user:password form in origin to get round password prompts
 #must be a better way..
-git config remote.origin.url https://$UserName:$Password@github.com/$RepoOwner/$Repo.git
+git config remote.origin.url https://$UserName":"$Password@github.com/$RepoOwner/$Repo.git
 
 git checkout $BaseBranch
 git pull
