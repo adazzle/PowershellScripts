@@ -48,7 +48,15 @@ $BaseBranch = "dev"
 
 if($InstallPreReqs) {
 Write-Host "do install? $InstallPreReqs "
-(new-object Net.WebClient).DownloadString("https://raw.github.com/Iristyle/Posh-GitHub/master/Posh-Github.psm1") | iex
+
+   if(-not(Get-Module -name "PsGet")) {
+        Write-Host "PsGet is not installed so install it" 
+        (new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex 
+    }else{
+        Write-Host "PsGet is installed"
+    }
+    Install-Module -ModuleUrl "https://raw.github.com/Iristyle/Posh-GitHub/master/Posh-Github.psm1"
+
 }
 
 Write-Host "Setup github access"
