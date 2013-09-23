@@ -46,7 +46,15 @@ $InstallPreReqs = $true,
 [string]
 $BaseBranch = "dev"
 )
+if($InstallPreReqs) {
+Write-Host "Installing pre requisites "
+if(-not(Get-Module Posh-GitHub)) {
+    cinst Posh-GitHub
+}
+}
 
+Write-Host "Setup github access"
+New-GitHubOAuthToken -Username $UserName -Password $Password
 
 
   Write-Host "All Done"
