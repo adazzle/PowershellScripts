@@ -1,6 +1,6 @@
 #Requires -Version 3.0
 
-function New_GitHubBranchFromLabel {
+function New-GitHubBranchFromLabel {
 [CmdletBinding()]
 param(
 [Parameter(Mandatory = $true)]
