@@ -8,11 +8,11 @@ function Get-CurrentDirectory
 
 function GetRemotes
 {
-  $remotes = @{}
   #try to sniff out the repo based on 'upstream'
   if ($matches -ne $null) { $matches.Clear() }
-  $gitRemotes = git remote -v show 2> $null
-
+    $gitRemotes = git remote -v show 2> $null
+  Write-Host $gitRemotes
+  
   $pattern = '^(.*)?\t.*github.com\/(.*)\/(.*) \((fetch|push)\)'
   $gitRemotes |
     Select-String -Pattern $pattern -AllMatches |
@@ -22,14 +22,9 @@ function GetRemotes
         Owner = $_.Matches.Groups[2].Value;
         Repository = ($_.Matches.Groups[3].Value -replace '\.git$', '');
       }
-
-      if (!$remotes.ContainsKey($repo.Name))
-      {
-        $remotes."$($repo.Name)" = $repo;
-      }
     }
-
-  return $remotes
+	
+  return $repo
 }
 
 # Get-GitDirectory and Get-LocalOrParentPath are Posh-Git helpers
@@ -380,13 +375,18 @@ function New-GitHubPullRequest
   {
     #try to sniff out the repo based on 'upstream'
     $remotes = GetRemotes
-    if (!($remotes.upstream))
+	Write-Host $remotes
+	
+    if (!($remotes))
     {
-      throw "No remote named 'upstream' defined, so cannot determine where to send pull"
+      throw "No remote is defined, so cannot determine where to send pull"
     }
 
-    $Owner = $remotes.upstream.owner
-    $Repository = $remotes.upstream.repository
+	$Owner = $remotes.Owner
+	$Repository = $remotes.Repository
+	Write-Host $Owner
+	Write-Host $Repository
+    
   }
   elseif ([string]::IsNullOrEmpty($Owner) -or [string]::IsNullOrEmpty($Repository))
   {
