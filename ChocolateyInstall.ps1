@@ -35,8 +35,12 @@ Download-File 'https://github.com/chocolatey/chocolatey/blob/master/src/tools/7z
 
 # unzip the package
 Write-Host "Extracting $file to $tempDir..."
+$tempDir = Join-Path $tempDir "unzipped"
+if (![System.IO.Directory]::Exists($tempDir)) {[System.IO.Directory]::CreateDirectory($tempDir)}
 Start-Process "$7zaExe" -ArgumentList "x -o`"$tempDir`" -y `"$file`"" -Wait
 
 #Get destination folder
 $destination = git --exec-path
+$tempDir  = Join-Path $tempDir "\*"
 Write-Host "Copying 'git create-pr helper' to $destination"
+Copy-Item -Force -Path $tempDir -Destination $destination
