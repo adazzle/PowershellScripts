@@ -79,14 +79,16 @@ $JiraPassword = Initialize-JiraGithubCredentials -envariable "jira_password" -me
 
 $JiraBaseUrl = "https://adazzle.atlassian.net"
 
-Write-Host ${Env:\GITHUB_OAUTH_TOKEN}
-if(!${Env:\GITHUB_OAUTH_TOKEN})
-{
-	$UserName = Read-Host "Please provide Github username"
-	$Password = Read-Host "Please provide Github password"
-	New-GitHubOAuthToken -Username $UserName -Password $Password
-}
 
+$GithubToken = [environment]::GetEnvironmentVariable("GITHUB_OAUTH_TOKEN","User")
+if (!$GithubToken){
+	$UserName = Read-Host "Please provide Github username "
+	$Password = Read-Host "Please provide Github password "
+	New-GitHubOAuthToken -Username $UserName -Password $Password
+}else{
+	$env:GITHUB_OAUTH_TOKEN = $GithubToken
+}
+	
 $TotalExistingPRs = Find-ExistingPullRequest -Base 'dev' -Owner "adazzle" -Repository "mediaAppSln" -State "open"
 if ($TotalExistingPRs -eq "0") 
 {
