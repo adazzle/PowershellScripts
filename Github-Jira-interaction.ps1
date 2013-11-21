@@ -1,23 +1,5 @@
 $ErrorActionPreference = 'SilentlyContinue'
 
-function Install-Prerequisite()
-{
-	if (2 -ge $host.version.major) { 
-		cinst powershell
-	}else{ 
-		"Powershell 3 is already installed" 
-	}
-
-	if($(Get-Module -ListAvailable | Where-Object { $_.name -eq "Posh-Github" }))
-	{
-		Write-Host "Posh-Github is already installed" 
-	}else{
-		Write-Host "Posh-Github is not installed so install it" 
-		cinst Posh-GitHub
-	}
-  return $null
-}
-
 function Initialize-JiraGithubCredentials()
 {
 	Param([string]$envariable,
@@ -71,8 +53,6 @@ function Find-ExistingPullRequest()
 	return $totalCount
 }
 
-# Install powershell 3 and Posh-Github if not already installed
-Install-Prerequisite
 # Git\Set Github and Jira username\passwords
 $JiraUserName = Initialize-JiraGithubCredentials -envariable "jira_username" -message "Jira username"
 $JiraPassword = Initialize-JiraGithubCredentials -envariable "jira_password" -message "Jira password"
