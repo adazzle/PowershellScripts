@@ -89,7 +89,7 @@ if ($TotalExistingPRs -eq "0")
 			$summary = ($result | Select -ExpandProperty fields) | Select -ExpandProperty summary
 			#Write-Host "$summary"
 
-			New-GitHubPullRequest -Title "[$JiraIssue] - $summary" -Body "$JiraBaseUrl/browse/$JiraIssue" -Base 'dev' -Owner "adazzle" -Repository "mediaAppSln"	
+			New-GitHubPullRequest -Title "$summary - [$JiraIssue]" -Body "$JiraBaseUrl/browse/$JiraIssue" -Base 'dev' -Owner "adazzle" -Repository "mediaAppSln"	
 			
 			$html_url = "PR:" + ($GITHUB_API_OUTPUT | Select -ExpandProperty html_url)
 			$commits_url = "Commits:" + ($GITHUB_API_OUTPUT | Select -ExpandProperty commits_url)
