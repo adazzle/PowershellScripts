@@ -132,12 +132,19 @@ function Invoke_GitHubBuildFromLabel {
 		
 		# Check all ok
 		if(git status --porcelain) {
-			write-host "Merge conflicts on $remoteBranch - aborting "
-			write-host "Either remove the $Labels label from $remoteBranch " $issue.title
-			write-host "OR resolve the cause of the conflict on $remoteBranch, push the changes and then rerun"
-			$issue.url | clip
-			Write-host "The link to the GitHub issue is now in your clipboard"
-			exit 1
+			$FilePathsWithConflicts = git diff --name-only --diff-filter=U | Out-String
+			if ($FilePathsWithConflicts.length -gt 0) {
+				write-host "Merge conflicts on $remoteBranch - aborting "
+				write-host "Either remove the $Labels label from $remoteBranch " $issue.title
+				write-host "OR resolve the cause of the conflict on $remoteBranch, push the changes and then rerun"
+				$issue.url | clip
+				Write-host "The link to the GitHub issue is now in your clipboard"
+				exit 1
+			}
+			else {
+				git commit -am "Merge $branchName into $TempBranchName after RERERE conflict resolution."
+				write-host "Merge completed using previous rerere resolution"
+			}
 		}
 		else {
 			write-host "Merge was ok"
