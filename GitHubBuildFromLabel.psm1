@@ -59,8 +59,11 @@ function Invoke_GitHubBuildFromLabel {
 	}
 	
 	# Setup Github access
-	Write-Host "Setup github access"
-	New-GitHubOAuthToken -Username $UserName -Password $Password
+	#Write-Host "Setup github access"
+	#New-GitHubOAuthToken -Username $UserName -Password $Password
+	#It has stopped working - looks like Github made some changes to api in V3 but Posh Github has not been updated accordingly 
+	#Work Around is to generate token (https://help.github.com/articles/creating-an-access-token-for-command-line-use) and add it environment variable using powershell command '$env:GITHUB_OAUTH_TOKEN =TokenObtainedEarlier'
+ 
 
 	# Fetch requested issues
 	$labelNames = $Labels.split(",")
